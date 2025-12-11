@@ -20,11 +20,13 @@ export const initSMTP = (): MailProvider => {
 	assert(env.MAIL_HOST, 'MAIL_HOST is not set');
 
 	const hasAuth = env.MAIL_USER && env.MAIL_PASS;
-	const isSecure = env.MAIL_SECURE ? Boolean(env.MAIL_SECURE) : hasAuth;
-
+	const port = env.MAIL_PORT ? Number(env.MAIL_PORT) : undefined;
+    const isSecure =
+        env.MAIL_SECURE?.toUpperCase() === "TRUE" ? true : false;
+	
 	const transporter = nodemailer.createTransport({
 		host: env.MAIL_HOST,
-		port: env.MAIL_PORT,
+		port: port,
 		secure: isSecure,
 		auth: hasAuth
 			? {
