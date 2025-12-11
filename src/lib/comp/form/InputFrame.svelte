@@ -79,7 +79,7 @@
 		}
 
 		small {
-			@apply text-xs;
+			@apply text-xs max-w-fit;
 		}
 
 		.inputs {

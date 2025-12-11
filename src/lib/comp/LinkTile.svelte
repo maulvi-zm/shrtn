@@ -28,7 +28,9 @@
 	let showModal = $state(false);
 	const shrtnUrl = new URL(key, origin);
 	const { hostname } = new URL(url);
-	const favicon = `https://icons.duckduckgo.com/ip3/${hostname}.ico`;
+	const favicon = `https://api.microlink.io/?url=https%3A%2F%2F${hostname}&palette=true&embed=logo.url`;
+
+    console.log(favicon)
 
 	const calcTimeLeft = (expiresAt: Date) => {
 		const now = new Date();
