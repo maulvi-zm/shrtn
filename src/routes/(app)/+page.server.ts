@@ -117,6 +117,20 @@ export const actions = {
 		}
 
 		const { ttl, link: url, short, passphrase, callLimit } = form.data;
+		
+		if (short) {
+			const db = getDB();
+			const existingLink = await db
+				.select({ id: schema.link.id })
+				.from(schema.link)
+				.where(eq(schema.link.id, short))
+				.get();
+			
+			if (existingLink) {
+				return setError(form, 'short', m.error_custom_url_taken());
+			}
+		}
+
 		const expiresAt = ttl == null ? null : new Date(Date.now() + ttl);
 		const linkData = await saveLink({
 			id: short || nanoid(SHORTEN_LENGTH),

@@ -87,15 +87,31 @@ const LinkValueSchema = v.pipe(
 	}, m.invalid_private_link)
 );
 
+const RESERVED_ROUTES = ['login', 'cleanup', 'about', 'setup'];
+
+const ShortSchema = v.pipe(
+	v.optional(v.pipe(v.string(), v.trim())),
+	v.transform((value) => {
+		if (!value || value === '') return undefined;
+		return value;
+	}),
+	v.custom((value: unknown) => {
+		if (!value || typeof value !== 'string') return true;
+		const lowerValue = value.toLowerCase();
+		if (RESERVED_ROUTES.includes(lowerValue)) {
+			return false;
+		}
+		return /^[a-zA-Z0-9_-]+$/.test(value);
+	}, m.error_invalid_custom_url)
+);
+
 const LinkSchemaBase = v.object({
 	link: LinkValueSchema,
 	passphrase: v.optional(v.pipe(v.string(), v.trim())),
 	callLimit: v.optional(
 		v.pipe(v.number(m.invalid_number), v.integer(), v.minValue(1, m.invalid_minVlaue))
 	),
-	short: v.pipe(
-		v.fallback(v.pipe(v.string(), v.trim(), v.minLength(1)), () => nanoid(SHORTEN_LENGTH))
-	)
+	short: ShortSchema
 });
 
 const getMaxValueValidator = (step: TTL_STEPS | undefined) => {

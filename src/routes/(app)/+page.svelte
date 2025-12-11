@@ -22,14 +22,10 @@
 		validators: valibotClient(schema),
 		resetForm: true,
 		onResult: async ({ result }) => {
-			$form.short = nanoid(SHORTEN_LENGTH);
 			if (result.type === 'success') {
 				const { data } = result.data as { data: Link };
 				addLink(data);
 			}
-		},
-		onError: () => {
-			$form.short = nanoid(SHORTEN_LENGTH);
 		}
 	});
 
@@ -76,6 +72,25 @@
 				</Button>
 			</InputFrame>
 			<ul class="optional-definitions">
+				<li>
+					<OptionalInputFrame
+						onremove={() => ($form.short = undefined)}
+						for="custom-url-input"
+						error={$errors.short?.[0]}
+					>
+						{#snippet label()}
+							{m.custom_url()}<LinkIcon />
+						{/snippet}
+						<Input
+							id="custom-url-input"
+							name="short"
+							placeholder={m.custom_url_placeholder()}
+							autocomplete="off"
+							bind:value={$form.short}
+							onkeyup={() => validate('short')}
+						/>
+					</OptionalInputFrame>
+				</li>
 				<li>
 					<OptionalInputFrame
 						for="ttl-input"
