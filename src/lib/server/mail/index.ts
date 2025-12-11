@@ -9,6 +9,7 @@ import { env } from '$env/dynamic/private';
 import type { MailProvider } from './provider/types';
 import { initMailpit } from './provider/mailpit';
 import { initSMTP } from './provider/smtp';
+import { initResend } from './provider/resend';
 import assert from 'node:assert';
 
 const getProvider = (): MailProvider => {
@@ -19,6 +20,8 @@ const getProvider = (): MailProvider => {
 			return initSMTP();
 		case 'POSTMARK':
 			return initPostmark();
+		case 'RESEND':
+			return initResend();
 		default:
 		case 'MAILPIT':
 			return initMailpit();
